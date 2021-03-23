@@ -41,7 +41,7 @@ def main():
     dfa_example = automata_IO.dfa_dot_importer('afd.dot')
     #DFA.dfa_completion(dfa_example)
     #new_dfa=DFA.dfa_minimization(dfa_example)
-
+    print("Hola")
     automata_IO.dfa_to_dot(dfa_example, 'hola', '.')
 
 if __name__ == "__main__":
