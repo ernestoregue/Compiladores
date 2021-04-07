@@ -3,7 +3,7 @@ from Estado import *
 from Transicion import *
 
 class AFN_e():
-    def __init__(self, numAFN, K = list(), Sigma = list(), S = list(), Z = list(), M = list()):
+    def __init__(self, numAFN, K = list(), Sigma = list(), S = object(), Z = object(), M = list()):
         self.K = K
         self.Sigma = Sigma
         self.S = S
@@ -81,8 +81,7 @@ class AFN_e():
         print(self.Sigma)
 
         print("Estado de inicio del automata")
-        for e in self.S:
-            print(self.S.__str__())
+        print(self.S.__str__())
 
         print("Conjunto de Estados(Objeto) no vacios")
         for e in self.K:
@@ -92,8 +91,7 @@ class AFN_e():
         f.write("\n")
 
         print("Conjunto de Estados(Objeto) de aceptacion")
-        for e in self.Z:
-            print(self.Z.__str__())
+        print(self.Z.__str__())
 
         print("Conjunto de Transiciones(Objeto)")
         for e in self.M:
