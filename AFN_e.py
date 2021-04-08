@@ -24,16 +24,70 @@ class AFN_e():
 
         return self
 
-    
-    def unir(self, token):
-        e = [self.creaEdo(True, -1), 
-            self.creaEdo(False,-1), 
-            self.creaEdo(False, -1), 
-            self.creaEdo(False, token)]
-        t = [self.creaTrans(e[0],e[1],"£","£"),
-            self.creaTrans(e[1],)
-        ]
+    @staticmethod
+    def unir(AFNS, token):
+        RAFN = AFN_e(4)
+        e = []
 
+        for i in range(len(AFNS)):
+            for j in range(len(AFNS[i].K)):
+                RAFN.K.append(AFNS[i].K[j])
+                RAFN.M.append(AFNS[i].M[j])
+                RAFN.Sigma.append(AFNS[i].Sigma[j])
+
+
+        for i in range(4):
+            if i == 0:
+                e.append(RAFN.creaEdo(True,-1))
+                RAFN.S = e[i]
+            elif i == 3:
+                e.append(RAFN.creaEdo(False, token))
+                RAFN.Z = e[i]
+            else:
+                e.append(RAFN.creaEdo(False,-1))
+                
+
+        RAFN.creaTrans(e[0], e[1], "£", "£")
+        RAFN.creaTrans(e[1], AFNS[0].S, "£", "£")
+        RAFN.creaTrans(e[1], AFNS[1].S, "£", "£")
+        RAFN.creaTrans(e[1], AFNS[1].S, "£", "£")
+        RAFN.creaTrans(AFNS[0].Z, e[2], "£", "£")
+        RAFN.creaTrans(AFNS[1].Z, e[2], "£", "£")
+        RAFN.creaTrans(e[2], e[3], "£", "£")
+        
+        for i in range(len(AFNS)):
+            AFNS[i].S.setEdoI(False)
+            AFNS[i].Z.setToken(-1)
+
+        return RAFN
+
+    @staticmethod
+    def concat(AFNS, token):
+        RAFN = AFN_e(5)
+
+        for i in range(len(AFNS)):
+            for j in range(len(AFNS[i].K)):
+                RAFN.K.append(AFNS[i].K[j])
+                RAFN.M.append(AFNS[i].M[j])
+                RAFN.Sigma.append(AFNS[i].Sigma[j])
+
+        
+        AFNS[0].S.setEdoI(False)
+        RAFN.S = AFNS[0].S
+        RAFN.S.setEdoI(True)
+
+        AFNS[1].Z.setToken(-1)
+        RAFN.Z = AFNS[1].Z
+        RAFN.Z.setToken(token)
+        
+        AFNS[1].S.setEdoI(False)
+        AFNS[0].Z.setToken(-1)
+        AFNS[0].Z = AFNS[1].S
+
+
+        
+
+        return RAFN
 
 
 
