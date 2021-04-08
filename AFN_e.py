@@ -1,4 +1,4 @@
-from PySimpleAutomata import DFA,automata_IO
+from PySimpleAutomata import NFA,automata_IO
 from Estado import *
 from Transicion import *
 
@@ -65,31 +65,80 @@ class AFN_e():
     def concat(AFNS, token):
         RAFN = AFN_e(5)
 
+        AFNS[0].S.setEdoI(False)
+        AFNS[0].Z.setToken(-1)
+        AFNS[1].S.setEdoI(False)
+        AFNS[1].Z.setToken(-1)
+
         for i in range(len(AFNS)):
             for j in range(len(AFNS[i].K)):
                 RAFN.K.append(AFNS[i].K[j])
                 RAFN.M.append(AFNS[i].M[j])
                 RAFN.Sigma.append(AFNS[i].Sigma[j])
 
-        
-        AFNS[0].S.setEdoI(False)
-        RAFN.S = AFNS[0].S
-        RAFN.S.setEdoI(True)
+        A = AFNS[0].S
+        B = AFNS[1].S
+        C = AFNS[0].Z
+        D = AFNS[1].Z
 
-        AFNS[1].Z.setToken(-1)
-        RAFN.Z = AFNS[1].Z
-        RAFN.Z.setToken(token)
-        
-        AFNS[1].S.setEdoI(False)
-        AFNS[0].Z.setToken(-1)
-        AFNS[0].Z = AFNS[1].S
+        A.setEdoI(True)
+        D.setToken(token)
 
-
-        
+        RAFN.S = A
+        RAFN.Z = D
+        B = C
+        del(C)
 
         return RAFN
 
+    @staticmethod
+    def cpositiva(AFN, token):
 
+        AFN.creaTrans(AFN.Z,AFN.S, "£", "£")
+        
+        A = AFN.S
+        B = AFN.Z
+
+        e1 = AFN.creaEdo(True, -1)
+        e2 = AFN.creaEdo(False, token)
+        
+        AFN.creaTrans(e1,A, "£", "£")
+        A.setEdoI(False)
+        AFN.S = e1
+
+        AFN.creaTrans(B, e2, "£", "£")
+        B.setToken(-1)
+        AFN.Z = e2
+
+        return AFN
+
+    @staticmethod
+    def ckleen(AFN, token):
+        RFNA = AFN_e.cpositiva(AFN,token)
+        
+        RFNA.creaTrans(RFNA.S,RFNA.Z, "£", "£")
+
+        return RFNA
+
+    def copcional(AFN, token):
+        
+        A = AFN.S
+        B = AFN.Z
+
+        e1 = AFN.creaEdo(True, -1)
+        e2 = AFN.creaEdo(False, token)
+        
+        AFN.creaTrans(e1,A, "£", "£")
+        A.setEdoI(False)
+        AFN.S = e1
+
+        AFN.creaTrans(B, e2, "£", "£")
+        B.setToken(-1)
+        AFN.Z = e2
+
+        AFN.creaTrans(e1,e2, "£", "£")
+
+        return AFN
 
     def creaEdo(self, raiz, token):
         """Crea un estado y lo agrega al AFN"""
