@@ -29,7 +29,6 @@ def main():
     AFN4.mostrar()
 
     RAFN = AFN_e.unir([AFN1,AFN2,AFN3],40,(AFN1.N+AFN2.N))
-    RAFN.mostrar()
     RAFN2 = AFN_e.concat([RAFN,AFN4],70, len(ArregloAFNS) + 10)
     RAFN2.mostrar()
 

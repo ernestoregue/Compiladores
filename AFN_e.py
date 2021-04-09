@@ -4,6 +4,7 @@ from Transicion import *
 
 class AFN_e():
     def __init__(self, numAFN, K = list(), Sigma = list(), S = object(), Z = object(), M = list()):
+        """Constructor del AFN"""
         self.K = K
         self.Sigma = Sigma
         self.S = S
@@ -12,7 +13,7 @@ class AFN_e():
         self.N = numAFN
     
     def nuevoAFNSimple(self,token = -1):
-        """Crea un AFN de una transicion y dos estados"""
+        """Crea un AFN de una transicion y dos estados, incluyendo su token"""
         vi = input("Ingresa el caracter inicial: ")
         vf = input("Ingresa el caracter final: ")
 
@@ -26,6 +27,8 @@ class AFN_e():
 
     @staticmethod
     def unir(AFNS, token, numAFN):
+        """Toma una lista de AFNS y los une con la forma de Thompson\n Se hace un nuevo token y un numero de AFN"""
+        """AFN_e.unir([AFN1,AFN2,AFN3,...], token, numAFN)"""
         RAFN = AFN_e(numAFN)
         
         e1 = RAFN.creaEdo(True, -1)
@@ -54,6 +57,8 @@ class AFN_e():
 
     @staticmethod
     def concat(AFNS, token, numAFN):
+        """Método para concatenar DOS AFNS"""
+        """AFN_e.concat([AFN1,AFN2], token, numAFN)"""
         RAFN = AFN_e(numAFN)
 
         A = AFNS[0].S
@@ -80,6 +85,7 @@ class AFN_e():
 
     @staticmethod
     def cpositiva(AFN, token):
+        """Reforma el AFN para ponerle una cerradura positiva"""
 
         AFN.creaTrans(AFN.Z,AFN.S, "£", "£")
         
@@ -101,6 +107,7 @@ class AFN_e():
 
     @staticmethod
     def ckleen(AFN, token):
+        """Reforma el AFN para ponerle una cerradura de Kleen"""
         RFNA = AFN_e.cpositiva(AFN,token)
         
         RFNA.creaTrans(RFNA.S,RFNA.Z, "£", "£")
@@ -109,6 +116,7 @@ class AFN_e():
 
     @staticmethod
     def copcional(AFN, token):
+        """Reforma el AFN para ponerle una cerradura opcional"""
         
         A = AFN.S
         B = AFN.Z
@@ -137,8 +145,6 @@ class AFN_e():
         if e.Token>-1:
             self.Z = e
         return e
-        
-        
 
     def creaTrans(self,edoi, edof, vi, vf):
         """Crea una transicion y se agrega al AFN"""
@@ -156,11 +162,6 @@ class AFN_e():
         for i in range(rango):
             self.Sigma.append(chr(VI))
 
-    def getEI(self):
-        return self.S
-    
-    def getEF(self):
-        return self.Z
 
 #------------------------MOSTRAR-------------------
     def mostrar(self):
