@@ -25,69 +25,56 @@ class AFN_e():
         return self
 
     @staticmethod
-    def unir(AFNS, token):
-        RAFN = AFN_e(4)
-        e = []
+    def unir(AFNS, token, numAFN):
+        RAFN = AFN_e(numAFN)
+        
+        e1 = RAFN.creaEdo(True, -1)
+        e2 = RAFN.creaEdo(False, -1)
+        e3 = RAFN.creaEdo(False, -1)
+        e4 = RAFN.creaEdo(False, token)
+
+        RAFN.creaTrans(e1,e2, "£", "£")
+        RAFN.creaTrans(e3,e4, "£", "£")
 
         for i in range(len(AFNS)):
-            for j in range(len(AFNS[i].K)):
-                RAFN.K.append(AFNS[i].K[j])
-                RAFN.M.append(AFNS[i].M[j])
-                RAFN.Sigma.append(AFNS[i].Sigma[j])
-
-
-        for i in range(4):
-            if i == 0:
-                e.append(RAFN.creaEdo(True,-1))
-                RAFN.S = e[i]
-            elif i == 3:
-                e.append(RAFN.creaEdo(False, token))
-                RAFN.Z = e[i]
-            else:
-                e.append(RAFN.creaEdo(False,-1))
-                
-
-        RAFN.creaTrans(e[0], e[1], "£", "£")
-        RAFN.creaTrans(e[1], AFNS[0].S, "£", "£")
-        RAFN.creaTrans(e[1], AFNS[1].S, "£", "£")
-        RAFN.creaTrans(e[1], AFNS[1].S, "£", "£")
-        RAFN.creaTrans(AFNS[0].Z, e[2], "£", "£")
-        RAFN.creaTrans(AFNS[1].Z, e[2], "£", "£")
-        RAFN.creaTrans(e[2], e[3], "£", "£")
+            RAFN.creaTrans(e2,AFNS[i].S, "£", "£")
+            RAFN.creaTrans(AFNS[i].Z, e3, "£", "£")
         
         for i in range(len(AFNS)):
             AFNS[i].S.setEdoI(False)
             AFNS[i].Z.setToken(-1)
+            RAFN.K += AFNS[i].K
+            RAFN.M += AFNS[i].M
+            RAFN.Sigma += AFNS[i].Sigma
+
+        RAFN.S = e1
+        RAFN.Z = e4
 
         return RAFN
 
     @staticmethod
-    def concat(AFNS, token):
-        RAFN = AFN_e(5)
-
-        AFNS[0].S.setEdoI(False)
-        AFNS[0].Z.setToken(-1)
-        AFNS[1].S.setEdoI(False)
-        AFNS[1].Z.setToken(-1)
-
-        for i in range(len(AFNS)):
-            for j in range(len(AFNS[i].K)):
-                RAFN.K.append(AFNS[i].K[j])
-                RAFN.M.append(AFNS[i].M[j])
-                RAFN.Sigma.append(AFNS[i].Sigma[j])
+    def concat(AFNS, token, numAFN):
+        RAFN = AFN_e(numAFN)
 
         A = AFNS[0].S
-        B = AFNS[1].S
-        C = AFNS[0].Z
-        D = AFNS[1].Z
+        B = AFNS[1].S.getNombre()
+        C = AFNS[1].Z
+        D = AFNS[0].Z.getNombre()
+        
 
-        A.setEdoI(True)
-        D.setToken(token)
+
+        for i in range(len(RAFN.M)):
+            if RAFN.M[i].EF.getNombre() == D:
+                RAFN.M[i].EF.setNombre(B)
+
+        for i in range(len(AFNS)):
+            AFNS[i].S.setEdoI(False)
+            AFNS[i].Z.setToken(-1)
 
         RAFN.S = A
-        RAFN.Z = D
-        B = C
-        del(C)
+        A.setEdoI(True)
+        RAFN.Z = C
+        C.setToken(token)
 
         return RAFN
 
@@ -120,6 +107,7 @@ class AFN_e():
 
         return RFNA
 
+    @staticmethod
     def copcional(AFN, token):
         
         A = AFN.S

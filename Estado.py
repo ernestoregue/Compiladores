@@ -27,6 +27,9 @@ class Estado():
     def getNombre(self):
         """Retorna el nombre del estado"""
         return self.Nombre
+    def setNombre(self, nombre):
+        """Cambia el nombre del estado"""
+        self.Nombre = nombre
 
     def __str__(self):
         """Retorna un string para imprimir los estados\nFormato : sn [root,shape]"""
